@@ -1,0 +1,9 @@
+div#cr-stage
+{
+    display: inline;
+}
+
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}

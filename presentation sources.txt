@@ -1,0 +1,6 @@
+Images:
+- Crafty Logo: http://craftyjs.com
+- Cross-Browser: http://www.closelycoded.com/resources/content/blog/120703162901_blog_cross-browser.jpg
+- Legos: http://www.wikihow.com/Sort-and-Store-LEGO-Toys
+- Collisions: http://craftyjs.com
+- Cat Fighter Spritesheet: http://opengameart.org/content/cat-fighter-sprite-sheet

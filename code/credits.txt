@@ -1,0 +1,2 @@
+Programming: Tobias Wehrum (http://dragonlab.de)
+Cat Fighter Sprite: dogchicken (http://opengameart.org/content/cat-fighter-sprite-sheet)
