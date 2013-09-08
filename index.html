@@ -1,0 +1,251 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Written Report by TobiasWehrum</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/TobiasWehrum/uidesign-assignment">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/TobiasWehrum/uidesign-assignment/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/TobiasWehrum/uidesign-assignment/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Written Report</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/TobiasWehrum">TobiasWehrum</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="game-development-with-crafty--a-short-introduction-with-a-focus-on-component-based-programming" class="anchor" href="#game-development-with-crafty--a-short-introduction-with-a-focus-on-component-based-programming"><span class="octicon octicon-link"></span></a>Game Development With Crafty – A Short Introduction With A Focus On Component-Based Programming</h1>
+
+<p>Crafty is a game engine, allowing you to make games with JavaScript. It has a lot of features, with the component-based paradigm being especially interesting to us. But before we start to look at this, let's answer a fundamental question about why we'd need a game engine when working with JavaScript. After all, plain-vanilla JavaScript, HTML and CSS gives you everything you need already, doesn't it?</p>
+
+<h2>
+<a name="why-would-you-use-a-game-engine-at-all" class="anchor" href="#why-would-you-use-a-game-engine-at-all"><span class="octicon octicon-link"></span></a>Why would you use a game engine at all?</h2>
+
+<p>The answer is easy: Many parts of game development are the same for each game, for example: The way input is taken from the keyboard, touch screen or mouse, graphics that are preloaded, shown and animated, sounds that have to be loaded and played or collisions between entities in the game world. A game engine provides easy ways to do handle those common things, leading to faster development – and also to less bugs, because it has been tried and actively used by many other developers.</p>
+
+<p>Now that we’ve established why to use a game engine, let’s talk about what Crafty gives us.</p>
+
+<h2>
+<a name="features-of-crafty" class="anchor" href="#features-of-crafty"><span class="octicon octicon-link"></span></a>Features of Crafty</h2>
+
+<p>First off, Crafty is cross-platform compatible: Sometimes, things are handled differently amongst browsers. By using a library like Crafty, you mostly don’t have to care about that anymore, because in case of doubt Crafty chooses the correct browser-specific way itself and falls back to alternatives if the best way isn’t possible in a browser.</p>
+
+<p>Furthermore, it provides you with multiple ways to give your game structure. That keeps the code cleaner (especially if you’re new to game development and aren’t experienced in organizing paradigms yet) and furthermore allows other Crafty developers to understand your code quicker. The main three structure-providing features are:</p>
+
+<ul>
+<li>Scenes: In games are usually many different game states like the Menu, an Options screen, the part where you’re actually playing, a Highscore screen and many more. Those have different content and functions and should be kept separate, and you should be easily able to switch to a clean copy of them – and that’s what scenes are.</li>
+<li>Entity Component System: This is a special way of organizing and reusing code instead of inheritance. The second part of this document will talk about this in more detail.</li>
+<li>Event: Events provide an easy way to inform other parts of the game that something has happened. The second part will contain an example for that as well.</li>
+</ul><p>There are also lots of little helpers. Two examples:</p>
+
+<ul>
+<li>Collision Detection: This is useful for all kinds of games, for example to determine whether a player is standing on a platform or if a spaceship was hit by a projectile. For certain collision types there’s also additional information, for example how much overlap there is, what the collision normal is et cetera.</li>
+<li>Sprite Maps: Those make loading and showing images easier by packing lots of them into a big picture. It also allows for easy animations.</li>
+</ul><p>Crafty also leaves you the choice between the Canvas or the Document Object Model:</p>
+
+<ul>
+<li>The Canvas is an HTML element in which content is rendered. The elements are saved inside Crafty itself, so there are no direct HTML elements for the entities. They are directly drawn inside the Canvas – which of course also means that you can only draw inside the Canvas.</li>
+<li>When using the DOM, each Crafty entity is a div HTML element and directly part of the website. Depending on your game, either might be preferable – the big plus of the DOM is that you are able to draw anywhere on the web page. This made the little toy that I made with Crafty possible – I’ll show it later.</li>
+</ul><p>There are three more questions that are important when choosing an engine (or any library): Is it still actively developed, does it have an active community and is it well documented? Active development ensures that new features will follow and more importantly that any bugs you encounter will probably still be fixed. An active community gives you the opportunity to ask questions, get help when you are stuck and by browsing the forum and other projects you can learn lots of new things. Why good documentation is a good thing doesn’t need an explanation.  Crafty has all of these three. (I’m missing good tutorials though.)</p>
+
+<p>Now that we’ve talked about Crafty in general, let’s dive in one topic in particular: What Component-based programming is and how it can help with your code organization.</p>
+
+<h2>
+<a name="component-based-programming" class="anchor" href="#component-based-programming"><span class="octicon octicon-link"></span></a>Component-based Programming</h2>
+
+<p>A common way to organize the different entities in a game is inheritance. Let’s take this structure as an example, with deeper elements being child classes of their respective parent elements:</p>
+
+<pre><code>* VisualEntity
+  * PhysicsEntity
+    * Player
+    * Enemy
+  * GuiEntity
+    * GuiText
+</code></pre>
+
+<p>This works pretty well so far. Everything is shown on the screen, so everything inherits from VisualEntity. Then there are some elements directly physically interacting in the game world and will scroll with it when the camera moves, like a Player or an Enemy, while others like a Text just need to be drawn and will always stay on camera.</p>
+
+<p>Let’s assume we will also have a vanishing enemy now that disappears when the player gets too close. And because the vanishing looks kind of cool, we also want the same effect for GUI-Text. The new structure is:</p>
+
+<pre><code>* VisualEntity
+  * PhysicsEntity
+    * Player
+    * Enemy
+      * VanishingEnemy
+  * GuiEntity
+    * GuiText
+      * VanishingGuiText
+</code></pre>
+
+<p>Oh. So we have two new classes now that do nearly the same, just for different parents. Of course we can have the vanishing code in an extra class and access it from VanishingEnemy and VanishingGuiText (that’s 3 classes now, but at least less code duplication!) or even additionally make an interface that the external VanishingGeneral class can use so we don’t have to write the access code in VanishingEnemy and VanishingGuiText (that’s 3 classes and an interface now. Uh…).</p>
+
+<p>And what if we want Text that is shown in the game world and scrolls with the camera, for example? That’s not really “Physical” though, so we’d need to split an IngameEntity off from PhysicalEntity. That would be:</p>
+
+<pre><code>* VisualEntity
+  * IngameEntity
+    * PhysicsEntity
+      * Player
+      * Enemy
+        * VanishingEnemy
+    * IngameText
+  * GuiEntity
+    * GuiText
+      * VanishingGuiText
+</code></pre>
+
+<p>The inheritance-based approach has a lot of flexibility problems – and that’s where the component-based model enters the stage.</p>
+
+<p>In component-based programming you don’t have a big inheritance structure. Instead, every entity instance is of a common type (for the sake of this example, let’s call it ComponentEntity) which holds a list of components.</p>
+
+<p>Our example above could for example contain these components which are actual classes:</p>
+
+<ul>
+<li>ImageRenderer</li>
+<li>TextRenderer</li>
+<li>Vanishing</li>
+<li>IngameScrolling</li>
+<li>Physics</li>
+<li>PlayerControl</li>
+<li>EnemyControl</li>
+</ul><p>Out of those, we can easily form those instances:</p>
+
+<ul>
+<li>Player
+
+<ul>
+<li>ImageRenderer</li>
+<li>IngameScrolling</li>
+<li>Physics</li>
+<li>PlayerControl</li>
+</ul>
+</li>
+<li>Enemy
+
+<ul>
+<li>ImageRenderer</li>
+<li>IngameScrolling</li>
+<li>Physics</li>
+<li>EnemyControl</li>
+</ul>
+</li>
+<li>VanishingEnemy
+
+<ul>
+<li>ImageRenderer</li>
+<li>IngameScrolling</li>
+<li>Physics</li>
+<li>EnemyControl</li>
+<li>Vanishing</li>
+</ul>
+</li>
+<li>IngameText
+
+<ul>
+<li>TextRenderer</li>
+<li>IngameScrolling</li>
+</ul>
+</li>
+<li>GuiText
+
+<ul>
+<li>TextRenderer</li>
+<li>Gui</li>
+</ul>
+</li>
+<li>VanishingGuiText
+
+<ul>
+<li>TextRenderer</li>
+<li>Gui</li>
+<li>Vanishing</li>
+</ul>
+</li>
+<li>GuiImage
+
+<ul>
+<li>ImageRenderer</li>
+<li>Gui</li>
+</ul>
+</li>
+</ul><p>With a smaller amount of classes, we’ve achieved greater flexibility. Components usually have a way to access or require each other which is also present in Crafty.</p>
+
+<p>Apart from the flexibility, the way components are made forces you to think about small, modular classes, which improves readability.</p>
+
+<p>In Crafty, you’d create an entity instance like this:</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">Crafty</span><span class="p">.</span><span class="nx">e</span><span class="p">(</span><span class="s2">"2D, DOM, Color, Twoway"</span><span class="p">);</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">attr</span><span class="p">({</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">w</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span> <span class="mi">100</span> <span class="p">});</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">color</span><span class="p">(</span><span class="s1">'rgb(255,0,0)'</span><span class="p">);</span> 
+<span class="nx">entity</span><span class="p">.</span><span class="nx">twoway</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+
+<p>This makes an entity with the components “2D”, “DOM”, “Color” and “Twoway” (which allows the entity to be steered in two directions) and then configures some of the components which take parameters.</p>
+
+<p>You can also create components yourself. Let’s say that we want the entity to have a random position at the beginning:</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">Crafty</span><span class="p">.</span><span class="nx">e</span><span class="p">(</span><span class="s2">"2D, DOM, Color, Twoway"</span><span class="p">);</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">attr</span><span class="p">({</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">w</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span> <span class="mi">100</span> <span class="p">});</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">color</span><span class="p">(</span><span class="s1">'rgb(255,0,0)'</span><span class="p">);</span> 
+<span class="nx">entity</span><span class="p">.</span><span class="nx">twoway</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">Crafty</span><span class="p">.</span><span class="nx">e</span><span class="p">(</span><span class="s2">"2D, DOM, Color, Twoway, RandomPosition"</span><span class="p">)</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">attr</span><span class="p">({</span> <span class="nx">w</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span> <span class="mi">100</span> <span class="p">})</span> 
+<span class="nx">entity</span><span class="p">.</span><span class="nx">randomize</span><span class="p">();</span> 
+<span class="nx">entity</span><span class="p">.</span><span class="nx">color</span><span class="p">(</span><span class="s1">'rgb(255,0,0)'</span><span class="p">);</span>
+<span class="nx">entity</span><span class="p">.</span><span class="nx">twoway</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+
+<p>A very cool feature of components is that we can now think about entities as “things that have certain components/properties”. For example if we had a fire, we could do this:</p>
+
+<div class="highlight"><pre><span class="nx">Crafty</span><span class="p">(</span><span class="s2">"Flammable"</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Check distance</span>
+    <span class="c1">// Possibly set on flames</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>But what if a component wants to be informed of something happening by another component? It would be extremely inflexible to hardwire them as you can’t be sure who wants to be informed when writing your code. Luckily, Crafty contains “events”.</p>
+
+<p>Let’s say we have a Player which can collect coins. The GUI wants to know when he collects one to update a counter, and the SoundManager wants to play a “pling” sound. They both would ask the player coin collecting component to subscribe them to the “collected coin” event. Later on, when the player collects a coin, the “collected coin” event gets triggered, and everybody who subscribed gets informed via a method call.</p>
+
+<p>Another example: The player Collision component registers a collision, sends out a “collided” event with the additional information that it collided with a platform, and the subscribed Physics component sets the player’s current falling speed to 0.</p>
+
+<p>In Crafty, events are extremely easy to handle:</p>
+
+<div class="highlight"><pre><span class="nx">Crafty</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">"PlayerCollided"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">otherThing</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">"PlayerCollided with "</span> <span class="o">+</span> <span class="nx">otherThing</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">Crafty</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">"PlayerCollided"</span><span class="p">,</span> <span class="nx">platform</span><span class="p">);</span>
+</pre></div>
+
+<p>You just call Crafty.bind to bind a function to a named event, and then later you trigger that event which every argument you want to call – in this example, which platform the player collided with.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
